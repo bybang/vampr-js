@@ -10,32 +10,80 @@ class Vampire {
 
   // Adds the vampire as an offspring of this vampire
   addOffspring(vampire) {
-
+    this.offspring.push(vampire);
+    vampire.creator = this;
   }
 
   // Returns the total number of vampires created by that vampire
   get numberOfOffspring() {
-
+    return this.offspring.length;
   }
 
   // Returns the number of vampires away from the original vampire this vampire is
   get numberOfVampiresFromOriginal() {
+    let numberOfVampires = 0;
+    let currentVampire = this;
 
+    while (currentVampire.creator) {
+      currentVampire = currentVampire.creator;
+      numberOfVampires++;
+    }
+    return numberOfVampires;
   }
 
   // Returns true if this vampire is more senior than the other vampire. (Who is closer to the original vampire)
   isMoreSeniorThan(vampire) {
-
+    if (!this.creator) {
+      return true;
+    }
+    if (this.numberOfVampiresFromOriginal < vampire.numberOfVampiresFromOriginal) {
+      return true;
+    }
+    return false;
   }
 
-  /** Stretch **/
+  /** Stretch (NOT SOLVED) **/
 
   // Returns the closest common ancestor of two vampires.
   // The closest common anscestor should be the more senior vampire if a direct ancestor is used.
   // For example:
   // * when comparing Ansel and Sarah, Ansel is the closest common anscestor.
   // * when comparing Ansel and Andrew, Ansel is the closest common anscestor.
+  /*      o
+  *   1   2   3    
+  *       8  4 5
+  *            6
+  *            7
+  */
+
   closestCommonAncestor(vampire) {
+    // console.log(vampire.creator);
+    if (!this.creator) return this;
+    // if (vampire.numberOfVampiresFromOriginal === 1) return vampire.creator;
+    if (this.name === vampire.name) {
+      return this;
+    }
+    // if (this.creator === vampire.name || vampire.creator === this.name) return this; 
+    
+    let youngerVampire;
+    let olderVampire;
+    // while (this.numberOfVampiresFromOriginal < vampire.numberOfVampiresFromOriginal) {
+    //   vampire = vampire.creator
+    // }
+    if (this.numberOfVampiresFromOriginal < vampire.numberOfVampiresFromOriginal) {
+      youngerVampire = vampire;
+      olderVampire = this;
+    } else {
+     youngerVampire = this;
+     olderVampire = vampire; 
+    }
+    while(youngerVampire.creator) {
+      if (youngerVampire.creator !== olderVampire.creator) {
+        youngerVampire = youngerVampire.creator;
+      } else {
+        return youngerVampire.creator;
+      }
+    }
 
   }
 }
